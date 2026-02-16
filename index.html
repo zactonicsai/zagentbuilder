@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zactonics AI Agent Platform</title>
-    <script src="tailwinds.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -131,7 +131,10 @@
     </div>
     <nav style="flex:1;padding:16px 0;overflow-y:auto">
         <p style="padding:0 24px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Workspace</p>
-        <button onclick="switchSection('dashboard')" class="nav-item nav-active" data-section="dashboard" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-primary);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
+        <button onclick="switchSection('learn')" class="nav-item nav-active" data-section="learn" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-primary);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
+            <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>What Are Agents?
+        </button>
+        <button onclick="switchSection('dashboard')" class="nav-item" data-section="dashboard" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
             <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>Dashboard
         </button>
         <button onclick="switchSection('agents')" class="nav-item" data-section="agents" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
@@ -173,7 +176,40 @@
         </div>
     </header>
 
-    <section id="section-dashboard" style="padding:32px">
+    <!-- LEARN / WHAT ARE AGENTS -->
+    <section id="section-learn" style="padding:32px">
+        <!-- Hero -->
+        <div class="card" style="padding:32px;margin-bottom:24px;border-left:4px solid var(--text-accent)">
+            <p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-accent);margin-bottom:8px">Understanding AI Agents</p>
+            <h3 style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--text-primary);margin-bottom:12px">What Is an AI Agent?</h3>
+            <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:800px">An AI Agent is a <strong style="color:var(--text-primary)">software program that can think, decide, and act on its own</strong> to complete tasks for you. Think of it like a digital employee — you give it a goal (like "process these invoices" or "find the best price for this product"), and it figures out the steps, uses the right tools, and gets it done. Unlike simple automation that follows a fixed script, an agent can <strong style="color:var(--text-primary)">adapt, learn from results, and make decisions</strong> when unexpected situations come up.</p>
+        </div>
+
+        <!-- Agent Types Grid -->
+        <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:16px">Types of AI Agents</h4>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px" id="agent-types-grid"></div>
+
+        <!-- How It Works - Workflow -->
+        <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">How an Agent Works — From Request to Result</h4>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Every agent follows this workflow. Click any step or tool to learn more.</p>
+
+        <!-- Workflow Diagram -->
+        <div class="card" style="padding:24px;margin-bottom:24px;overflow-x:auto">
+            <div style="display:flex;align-items:stretch;gap:0;min-width:900px" id="workflow-steps"></div>
+        </div>
+
+        <!-- Tools & Dependencies -->
+        <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">Tools, Components &amp; Dependencies</h4>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Every agent relies on these building blocks. Click any tool to learn what it does.</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px" id="tools-grid"></div>
+
+        <!-- Key Concepts -->
+        <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">Key Concepts</h4>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Important ideas behind how agents think and operate.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="concepts-grid"></div>
+    </section>
+
+    <section id="section-dashboard" style="padding:32px;display:none">
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px" id="stats-row"></div>
         <div class="card" style="padding:24px;margin-bottom:32px">
             <h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent);margin-bottom:16px">Active Build Pipeline</h3>
@@ -322,11 +358,11 @@ function renderAgentCard(a,i){
 }
 
 function switchSection(s){
-    ['dashboard','agents','pipeline'].forEach(x=>{document.getElementById('section-'+x).style.display=x===s?'block':'none'});
+    ['learn','dashboard','agents','pipeline'].forEach(x=>{document.getElementById('section-'+x).style.display=x===s?'block':'none'});
     document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('nav-active');n.style.color='var(--text-muted)'});
     const btn=document.querySelector(`.nav-item[data-section="${s}"]`);
     if(btn){btn.classList.add('nav-active');btn.style.color='var(--text-primary)'}
-    document.getElementById('page-title').textContent={dashboard:'Agent Dashboard',agents:'Agent Library',pipeline:'Build Pipeline'}[s];
+    document.getElementById('page-title').textContent={learn:'What Are AI Agents?',dashboard:'Agent Dashboard',agents:'Agent Library',pipeline:'Build Pipeline'}[s];
     if(s==='agents')renderAgentsGrid(currentFilter);
 }
 
@@ -391,7 +427,93 @@ function openAgentModal(type,id){
     }
 }
 
+function openConceptPopup(title, desc, details, related) {
+    const o=document.getElementById('modal-overlay'),b=document.getElementById('modal-body');o.style.display='flex';
+    const cb=`<button onclick="closeModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:20px">✕</button>`;
+    const ci=`background:var(--bg-card-inner);border-radius:12px;padding:16px;margin-bottom:12px`;
+    b.innerHTML=`<div style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><h3 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent)">${title}</h3>${cb}</div>
+        <div style="${ci}"><p style="font-size:14px;color:var(--text-primary);line-height:1.6">${desc}</p></div>
+        <div style="${ci};border-left:4px solid var(--accent-blue)"><p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-blue);margin-bottom:8px">How It Works</p><p style="font-size:13px;color:var(--text-secondary);line-height:1.6">${details}</p></div>
+        ${related?`<div style="${ci};border-left:4px solid var(--accent-green)"><p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-green);margin-bottom:8px">Related Concepts & Tools</p><div style="display:flex;flex-wrap:wrap;gap:6px">${related.split(', ').map(r=>`<span style="font-size:12px;padding:4px 10px;border-radius:6px;background:var(--bg-hover);border:1px solid var(--border-subtle);color:var(--text-secondary)">${r}</span>`).join('')}</div></div>`:''}
+    </div>`;
+}
+
 function init(){
+    // ─── LEARN SECTION ───
+    const agentTypes = [
+        {icon:'🤖',name:'Reactive Agents',color:'#3b82f6',desc:'Respond to specific events or triggers in real-time. They don\'t plan ahead — they react instantly when something happens.',detail:'Reactive agents are the simplest type. They use if-then rules: "If an invoice arrives, process it. If a lead fills out a form, score it." They\'re fast and reliable for predictable tasks. In Zactonics, agents like the Invoice Processor and Compliance Monitor use reactive patterns — watching data streams and acting immediately when conditions match.',related:'Event Triggers, Rules Engine, Real-Time Processing, Webhooks'},
+        {icon:'🧠',name:'Cognitive Agents',color:'#8b5cf6',desc:'Can reason, plan, and make decisions using AI models. They understand context and choose the best approach for complex problems.',detail:'Cognitive agents use Large Language Models (LLMs) and reasoning engines to understand situations, weigh options, and choose actions. They can read documents, understand intent, and explain their reasoning. Agents like the Tax Strategy Agent and BizDev Strategist use cognitive patterns — analyzing data, forming strategies, and providing justified recommendations.',related:'LLM Reasoning, Chain-of-Thought, Context Windows, Decision Trees'},
+        {icon:'🔄',name:'Autonomous Agents',color:'#10b981',desc:'Operate independently with minimal human input. They set sub-goals, coordinate with other agents, and self-correct when things go wrong.',detail:'Autonomous agents are the most advanced type. They break big goals into smaller tasks, execute them in sequence or parallel, monitor results, and adjust their approach. The City Planner AI and Hospital Ops Manager are autonomous — they continuously optimize complex systems, running simulations, predicting problems, and adapting without waiting for instructions.',related:'Goal Decomposition, Self-Correction, Multi-Agent Coordination, Feedback Loops'},
+        {icon:'📋',name:'Task-Specific Agents',color:'#f59e0b',desc:'Built to do one job extremely well. They\'re specialists — focused, fast, and highly accurate at their specific function.',detail:'Task-specific agents are fine-tuned for a single domain. They trade flexibility for precision. The BookKeeper AI only does accounting but does it with 99.4% accuracy. The Lead Scoring Engine only scores leads but outperforms manual scoring by 3x. These agents have deep domain knowledge and optimized workflows for their specific task.',related:'Domain Specialization, Fine-Tuning, Accuracy Metrics, Single-Purpose Design'},
+        {icon:'🤝',name:'Collaborative Agents',color:'#ec4899',desc:'Work together as a team. Multiple agents coordinate, share information, and hand off tasks to complete complex multi-step workflows.',detail:'Collaborative agents form an "agent mesh" where each specialist handles its part of a larger process. For example: the Procurement Agent identifies a need, the Inventory Oracle confirms stock levels, the Pricing Optimizer checks margins, and the Invoice Processor handles payment — all coordinating automatically through shared data and event queues.',related:'Agent Mesh, Message Queues, Shared Memory, Orchestration Layer'},
+        {icon:'🛡️',name:'Guardian Agents',color:'#ef4444',desc:'Monitor, protect, and ensure compliance. They watch over other agents and business processes to catch errors, fraud, or policy violations.',detail:'Guardian agents act as watchdogs. The Compliance Monitor watches for regulatory violations. The Crime Prevention Intel analyzes patterns for risks. These agents run continuously in the background, applying rules and ML models to detect anomalies. They can pause other agents, flag issues for human review, and generate audit reports automatically.',related:'Anomaly Detection, Continuous Monitoring, Audit Logging, Policy Enforcement'},
+    ];
+
+    document.getElementById('agent-types-grid').innerHTML = agentTypes.map((t,i) => `
+        <div class="card" style="padding:20px;opacity:0;animation:slide-up 0.5s ease-out ${i*0.06}s forwards;cursor:default">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+                <span style="font-size:28px">${t.icon}</span>
+                <div><h5 style="font-size:15px;font-weight:600;color:var(--text-primary)">${t.name}</h5><span style="display:inline-block;width:32px;height:3px;border-radius:2px;background:${t.color};margin-top:4px"></span></div>
+            </div>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:14px">${t.desc}</p>
+            <button onclick='openConceptPopup("${t.name}","${t.desc.replace(/'/g,"\\'")}","${t.detail.replace(/'/g,"\\'")}","${t.related}")' style="font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-main);color:var(--text-accent);cursor:pointer;font-family:inherit;transition:all 0.2s;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='var(--bg-input)'"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>More Info</button>
+        </div>`).join('');
+
+    const workflowSteps = [
+        {icon:'🎯',label:'Trigger',sub:'Request or Auto-Run',color:'#3b82f6',desc:'Every agent starts with a trigger — either a human request ("analyze Q3 costs"), a scheduled time (daily at 9am), an event (new invoice received), or another agent passing a task. The trigger includes the goal and any input data.',detail:'Triggers connect to webhooks, API endpoints, cron schedulers, message queues, and human interfaces. The orchestration layer routes the trigger to the correct agent based on task type and priority.',related:'Webhooks, API Endpoints, Cron Scheduler, Event Bus, Human-in-the-Loop'},
+        {icon:'🧠',label:'Understand',sub:'Parse & Plan',color:'#8b5cf6',desc:'The agent analyzes the request using NLP and its domain knowledge. It breaks the goal into sub-tasks, identifies what data it needs, which tools to use, and creates an execution plan.',detail:'This stage uses an LLM to interpret intent, extract entities, and generate a step-by-step plan. The planner considers constraints (budget limits, access permissions, deadlines) and chooses the optimal sequence of actions.',related:'NLP Parser, LLM Planner, Intent Recognition, Entity Extraction, Task Decomposition'},
+        {icon:'🔧',label:'Execute',sub:'Use Tools & APIs',color:'#f59e0b',desc:'The agent carries out its plan step by step — calling APIs, querying databases, running calculations, reading documents, or coordinating with other agents. Each step\'s output feeds the next.',detail:'Execution uses a tool-calling framework where the agent selects from available tools (database queries, API calls, file processors, calculators, web scrapers). It handles errors with retry logic and fallback strategies.',related:'Tool Framework, API Gateway, Database Connectors, Error Handling, Retry Logic'},
+        {icon:'🔍',label:'Verify',sub:'Check & Validate',color:'#10b981',desc:'Before delivering results, the agent checks its work — validating data accuracy, running quality checks, comparing against known benchmarks, and ensuring the output meets the goal.',detail:'Verification includes schema validation, cross-referencing with trusted sources, confidence scoring, and in some cases running the same task through a second agent for consensus. Results below confidence thresholds are flagged for human review.',related:'Validation Rules, Confidence Scoring, Cross-Reference Checks, Human Review Queue'},
+        {icon:'📊',label:'Deliver',sub:'Output & Report',color:'#ec4899',desc:'The agent packages its results into the required format — a report, dashboard update, email, database entry, or handoff to another agent — and logs everything for audit trails.',detail:'Delivery adapts to the consumer: structured JSON for downstream systems, formatted reports for humans, Slack messages for notifications, or API callbacks for integrated workflows. All outputs include provenance tracking showing what data and tools were used.',related:'Output Formatting, Audit Logging, Notification System, Provenance Tracking'},
+        {icon:'📈',label:'Learn',sub:'Improve & Adapt',color:'#6366f1',desc:'The agent records what worked and what didn\'t. Over time, it improves its accuracy, speed, and decision-making based on feedback and outcomes.',detail:'Learning happens through feedback loops: human ratings, outcome tracking (did the prediction come true?), and performance metrics. The system tunes prompts, adjusts confidence thresholds, and updates knowledge bases. Agents that consistently underperform are automatically flagged for retraining.',related:'Feedback Loops, Performance Metrics, Prompt Tuning, Knowledge Base Updates, Retraining Pipelines'},
+    ];
+
+    document.getElementById('workflow-steps').innerHTML = workflowSteps.map((s,i) => {
+        const arrow = i < workflowSteps.length-1 ? `<div style="display:flex;align-items:center;padding:0 4px"><svg style="width:24px;height:24px;color:var(--text-dim);flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>` : '';
+        return `<div style="display:flex;align-items:stretch;flex:1;gap:0"><button onclick='openConceptPopup("${s.label}: ${s.sub}","${s.desc.replace(/'/g,"\\'")}","${s.detail.replace(/'/g,"\\'")}","${s.related}")' style="flex:1;min-width:130px;background:var(--bg-card-inner);border:2px solid ${s.color}30;border-radius:12px;padding:16px;cursor:pointer;font-family:inherit;text-align:left;transition:all 0.25s;display:flex;flex-direction:column;gap:6px" onmouseover="this.style.borderColor='${s.color}';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='${s.color}30';this.style.transform='none'">
+            <span style="font-size:24px">${s.icon}</span>
+            <span style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${s.color}">Step ${i+1}</span>
+            <span style="font-size:14px;font-weight:700;color:var(--text-primary)">${s.label}</span>
+            <span style="font-size:11px;color:var(--text-muted)">${s.sub}</span>
+        </button>${arrow}</div>`;
+    }).join('');
+
+    const tools = [
+        {icon:'🧩',name:'LLM Engine',cat:'Core',desc:'The brain of the agent. Large Language Models (GPT, Claude, etc.) provide reasoning, language understanding, and decision-making capabilities.',detail:'LLMs process natural language, generate plans, write code, analyze documents, and make complex decisions. They run in secure sandboxed environments with token limits, temperature controls, and output filtering. Each agent uses a model optimized for its domain.',related:'Prompt Engineering, Token Management, Model Selection, Temperature Control'},
+        {icon:'🔌',name:'API Gateway',cat:'Infrastructure',desc:'Secure bridge connecting agents to external services, databases, and third-party tools. Handles authentication, rate limiting, and request routing.',detail:'The API gateway manages all outbound connections with OAuth2/API key authentication, circuit breakers for fault tolerance, request queuing, response caching, and detailed logging. It enforces per-agent permissions — each agent can only access approved endpoints.',related:'OAuth2, Rate Limiting, Circuit Breakers, Request Routing, API Keys'},
+        {icon:'💾',name:'Vector Database',cat:'Memory',desc:'Stores agent knowledge as mathematical embeddings so agents can quickly find relevant information using semantic search — not just keyword matching.',detail:'Vector databases (like Pinecone, Weaviate, or pgvector) convert documents, past interactions, and domain knowledge into high-dimensional vectors. When an agent needs context, it queries by meaning — finding relevant information even if the exact words differ.',related:'Embeddings, Semantic Search, RAG (Retrieval Augmented Generation), Similarity Scoring'},
+        {icon:'📡',name:'Event Bus',cat:'Infrastructure',desc:'Message highway that connects all agents and systems. When something happens anywhere, the event bus broadcasts it to any agent that cares.',detail:'The event bus uses publish-subscribe patterns (like Kafka or RabbitMQ) to decouple agents. When the Inventory Oracle detects low stock, it publishes an event. The Procurement Agent subscribes and auto-creates a PO. Events are persistent, ordered, and replayable for debugging.',related:'Pub-Sub, Message Queues, Kafka, Event Sourcing, Decoupled Architecture'},
+        {icon:'🔐',name:'Auth & Security',cat:'Security',desc:'Controls who and what can access agent capabilities. Manages encryption, permissions, audit logs, and compliance verification.',detail:'Multi-layered security: TLS 1.3 for transport, AES-256 for data at rest, RBAC for permissions, MFA for human access, and per-agent sandboxing. Every action is logged immutably. Security agents continuously scan for anomalies and policy violations.',related:'RBAC, MFA, Encryption, Sandboxing, Audit Trails, Zero Trust'},
+        {icon:'📊',name:'Analytics Engine',cat:'Intelligence',desc:'Tracks agent performance, accuracy, cost, and business impact. Generates dashboards and alerts when agents underperform or drift.',detail:'The analytics engine collects metrics from every agent interaction: response time, accuracy scores, confidence levels, cost per task, and business outcomes. It uses statistical process control to detect drift and triggers retraining when performance degrades.',related:'Performance Metrics, Drift Detection, Cost Tracking, SPC Charts, Alerting'},
+        {icon:'🔄',name:'Orchestrator',cat:'Core',desc:'The conductor that coordinates multi-step workflows. It decides which agent handles what, manages handoffs, and ensures tasks complete end-to-end.',detail:'The orchestrator manages DAGs (directed acyclic graphs) of tasks. It handles parallel execution, conditional branching, retry policies, timeout management, and human-approval gates. If one agent fails, the orchestrator reroutes to backups or escalates.',related:'DAG Workflows, Task Scheduling, Parallel Execution, Failure Recovery, Human Gates'},
+        {icon:'📝',name:'Knowledge Base',cat:'Memory',desc:'Structured repository of domain-specific information, business rules, policies, and historical data that agents reference when making decisions.',detail:'The knowledge base combines structured data (databases, spreadsheets), unstructured data (documents, emails), and encoded business rules. It\'s versioned, searchable, and continuously updated. Agents cite their sources so humans can verify any decision.',related:'Document Indexing, Business Rules, Version Control, Source Attribution, RAG Pipeline'},
+    ];
+
+    document.getElementById('tools-grid').innerHTML = tools.map((t,i) => `
+        <button onclick='openConceptPopup("${t.name}","${t.desc.replace(/'/g,"\\'")}","${t.detail.replace(/'/g,"\\'")}","${t.related}")' class="card" style="padding:16px;text-align:left;cursor:pointer;font-family:inherit;opacity:0;animation:slide-up 0.5s ease-out ${i*0.05}s forwards;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span style="font-size:22px">${t.icon}</span><span style="font-size:9px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:6px;background:var(--bg-badge);color:var(--text-muted)">${t.cat}</span></div>
+            <h5 style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:4px">${t.name}</h5>
+            <p style="font-size:11px;color:var(--text-muted);line-height:1.4">${t.desc.substring(0,80)}…</p>
+        </button>`).join('');
+
+    const concepts = [
+        {icon:'🔗',name:'Chain-of-Thought',desc:'Agents show their reasoning step by step, like showing your work in math. This makes decisions transparent and auditable.',detail:'Chain-of-thought (CoT) prompting forces the LLM to break complex reasoning into visible steps. Instead of jumping to an answer, the agent explains: "First I check inventory levels (500 units). Then I compare to reorder point (200). Since 500 > 200, no reorder needed." This transparency lets humans verify logic and catch errors.',related:'Explainable AI, Reasoning Traces, Prompt Engineering, Audit Trails'},
+        {icon:'🎭',name:'Hallucination Guards',desc:'Safety checks that catch when an AI makes up facts or gives confidently wrong answers, ensuring agents only output verified information.',detail:'Hallucination guards work at multiple layers: output validators check facts against knowledge bases, confidence thresholds reject uncertain answers, citation requirements force agents to show sources, and cross-agent verification runs the same query through independent models. Low-confidence outputs route to human review.',related:'Fact Checking, Confidence Thresholds, Source Citation, Cross-Validation'},
+        {icon:'👤',name:'Human-in-the-Loop',desc:'Critical decisions always get a human checkpoint. Agents handle the work but escalate to people for final approval on high-stakes actions.',detail:'HITL patterns include: approval gates (agent prepares, human approves), exception handling (agent runs until it hits uncertainty, then asks), and supervisory review (agent acts, human spot-checks). The system tracks which decisions humans override to improve agent accuracy over time.',related:'Approval Workflows, Exception Escalation, Override Tracking, Confidence Routing'},
+        {icon:'🏗️',name:'RAG Pipeline',desc:'Retrieval-Augmented Generation lets agents look up real, current information before answering — instead of relying only on what they were trained on.',detail:'RAG works in three steps: 1) Convert the question into a search query, 2) Retrieve relevant documents/data from the knowledge base using semantic search, 3) Feed both the question and retrieved context to the LLM to generate a grounded answer. This prevents hallucination and keeps agents current.',related:'Vector Search, Document Retrieval, Semantic Embeddings, Grounded Generation'},
+        {icon:'⚖️',name:'Bias Detection',desc:'Automated systems that monitor agent outputs for unfair patterns, ensuring AI decisions don\'t discriminate based on protected characteristics.',detail:'Bias detection runs statistical analysis on agent outputs across demographic groups. It measures disparate impact ratios, equal opportunity differences, and calibration across subgroups. When bias is detected, the system alerts operators and can automatically adjust decision thresholds or trigger retraining with balanced data.',related:'Fairness Metrics, Disparate Impact, Demographic Parity, Bias Mitigation, Retraining'},
+        {icon:'📜',name:'Prompt Engineering',desc:'The art of writing clear instructions for AI agents. Good prompts lead to accurate, consistent results — like writing a great job description.',detail:'Prompt engineering includes: system prompts (defining agent persona and rules), few-shot examples (showing desired input/output patterns), structured output schemas (ensuring consistent formats), and guard rails (specifying what the agent should never do). Prompts are version-controlled and A/B tested for optimization.',related:'System Prompts, Few-Shot Learning, Output Schemas, Guard Rails, A/B Testing'},
+    ];
+
+    document.getElementById('concepts-grid').innerHTML = concepts.map((c,i) => `
+        <button onclick='openConceptPopup("${c.name}","${c.desc.replace(/'/g,"\\'")}","${c.detail.replace(/'/g,"\\'")}","${c.related}")' class="card" style="padding:16px;text-align:left;cursor:pointer;font-family:inherit;opacity:0;animation:slide-up 0.5s ease-out ${i*0.06}s forwards;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            <span style="font-size:24px;display:block;margin-bottom:8px">${c.icon}</span>
+            <h5 style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px">${c.name}</h5>
+            <p style="font-size:12px;color:var(--text-secondary);line-height:1.5">${c.desc}</p>
+        </button>`).join('');
+
+    // ─── DASHBOARD SECTION ───
     const stats=[{l:'Active Agents',v:'24',s:'+3 this week'},{l:'Tasks Today',v:'1,847',s:'98.6% success'},{l:'Certifications',v:'18',s:'SOC2, ISO 27001'},{l:'Cost Savings',v:'$2.4M',s:'Annual projected'}];
     document.getElementById('stats-row').innerHTML=stats.map((s,i)=>`<div class="card" style="padding:20px;opacity:0;animation:slide-up 0.5s ease-out ${i*0.1}s forwards"><p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px">${s.l}</p><p style="font-size:28px;font-weight:700;color:var(--text-accent);font-family:'DM Serif Display',serif">${s.v}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${s.s}</p></div>`).join('');
 
