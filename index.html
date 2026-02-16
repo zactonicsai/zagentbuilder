@@ -113,11 +113,66 @@
         .bg-h:hover{background:var(--bg-hover)}
         .btn-ghost{background:var(--bg-input);border:1px solid var(--border-main);color:var(--text-secondary);transition:all 0.2s}
         .btn-ghost:hover{background:var(--bg-hover);color:var(--text-primary)}
+
+        /* Mobile top nav - hidden on desktop */
+        #mobile-nav{display:none}
+        #menu-toggle{display:none}
+        #sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:45}
+
+        @media(max-width:1024px){
+            /* Hide desktop sidebar, show mobile nav */
+            #sidebar{display:none!important}
+            #menu-toggle{display:none!important}
+            #mobile-nav{display:flex;position:sticky;top:0;z-index:40;background:var(--bg-card);border-bottom:1px solid var(--border-main);overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;padding:0}
+            #mobile-nav button{flex-shrink:0;padding:12px 16px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+            #mobile-nav button.mob-active{color:var(--text-accent);border-bottom-color:var(--text-accent);font-weight:600}
+            #main-content{margin-left:0!important}
+            .header-bar{display:none!important}
+            .stats-grid{grid-template-columns:repeat(2,1fr)!important}
+            .grid-3{grid-template-columns:repeat(2,1fr)!important}
+            .grid-4{grid-template-columns:repeat(2,1fr)!important}
+            .grid-6{grid-template-columns:repeat(3,1fr)!important}
+            .tab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap!important}
+            .tab-scroll button{white-space:nowrap;flex-shrink:0}
+            .section-pad{padding:20px!important}
+        }
+        @media(max-width:640px){
+            #mobile-nav button{padding:10px 12px;font-size:12px}
+            .stats-grid{grid-template-columns:1fr 1fr!important}
+            .grid-3{grid-template-columns:1fr!important}
+            .grid-4{grid-template-columns:1fr 1fr!important}
+            .grid-6{grid-template-columns:1fr 1fr!important}
+            .section-pad{padding:14px!important}
+            .hero-card{padding:18px!important}
+            .hero-card h3{font-size:20px!important}
+            .hero-card p.hero-text{font-size:13px!important}
+            .modal-inner{max-width:100%!important;margin:8px!important;max-height:95vh!important;border-radius:12px!important}
+            .workflow-row{min-width:auto!important;flex-direction:column!important}
+            .workflow-row .wf-arrow{transform:rotate(90deg)}
+            .agent-btns{flex-direction:column}
+        }
     </style>
 </head>
 <body data-theme="dark">
 
-<aside style="position:fixed;left:0;top:0;bottom:0;width:256px;background:var(--bg-sidebar);backdrop-filter:blur(20px);border-right:1px solid var(--border-main);z-index:50;display:flex;flex-direction:column;transition:background 0.4s">
+<!-- Mobile Top Navigation - visible only on mobile/tablet -->
+<nav id="mobile-nav">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;flex-shrink:0;border-right:1px solid var(--border-main)">
+        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#CCFF00,#10b981);display:flex;align-items:center;justify-content:center">
+            <svg style="width:16px;height:16px;color:#022c22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <span style="font-family:'DM Serif Display',serif;font-size:15px;color:var(--text-accent)">Zactonics</span>
+    </div>
+    <button onclick="switchSection('learn')" class="mob-active" data-mob="learn">📖 Agents 101</button>
+    <button onclick="switchSection('dashboard')" data-mob="dashboard">📊 Dashboard</button>
+    <button onclick="switchSection('agents')" data-mob="agents">🤖 Library</button>
+    <button onclick="switchSection('pipeline')" data-mob="pipeline">🔧 Pipeline</button>
+    <div style="flex-shrink:0;padding:8px 12px;display:flex;align-items:center">
+        <div class="theme-toggle" onclick="toggleTheme()" style="transform:scale(0.85)"><div class="toggle-dot"></div></div>
+    </div>
+</nav>
+
+<aside id="sidebar" style="position:fixed;left:0;top:0;bottom:0;width:256px;background:var(--bg-sidebar);backdrop-filter:blur(20px);border-right:1px solid var(--border-main);z-index:50;display:flex;flex-direction:column;transition:background 0.4s">
     <div style="padding:24px;border-bottom:1px solid var(--border-main)">
         <div style="display:flex;align-items:center;gap:12px">
             <div class="animate-pulse-glow" style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CCFF00,#10b981);display:flex;align-items:center;justify-content:center">
@@ -162,9 +217,12 @@
     </div>
 </aside>
 
-<main style="margin-left:256px;min-height:100vh" class="bg-grid">
-    <header style="position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg-body) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-main);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s">
-        <div><h2 style="font-size:18px;font-weight:600" id="page-title">Agent Dashboard</h2><p style="font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.05em">Build · Deploy · Monitor · Certify</p></div>
+<main id="main-content" style="margin-left:256px;min-height:100vh" class="bg-grid">
+    <header class="header-bar" style="position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg-body) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-main);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s">
+        <div>
+            <h2 style="font-size:18px;font-weight:600" id="page-title">What Are AI Agents?</h2>
+            <p style="font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.05em">Build · Deploy · Monitor · Certify</p>
+        </div>
         <div style="display:flex;align-items:center;gap:16px">
             <div style="position:relative">
                 <input type="text" placeholder="Search agents..." id="search-input" oninput="handleSearch(this.value)" style="background:var(--bg-input);border:1px solid var(--border-main);border-radius:8px;padding:8px 40px 8px 16px;font-size:14px;width:256px;outline:none;color:var(--text-primary);font-family:inherit;transition:background 0.3s,border 0.3s">
@@ -174,20 +232,22 @@
                 <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New Agent
             </button>
         </div>
+            </button>
+        </div>
     </header>
 
     <!-- LEARN / WHAT ARE AGENTS -->
-    <section id="section-learn" style="padding:32px">
+    <section id="section-learn" class="section-pad" style="padding:32px">
         <!-- Hero -->
-        <div class="card" style="padding:32px;margin-bottom:24px;border-left:4px solid var(--text-accent)">
+        <div class="card hero-card" style="padding:32px;margin-bottom:24px;border-left:4px solid var(--text-accent)">
             <p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-accent);margin-bottom:8px">Understanding AI Agents</p>
             <h3 style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--text-primary);margin-bottom:12px">What Is an AI Agent?</h3>
-            <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:800px">An AI Agent is a <strong style="color:var(--text-primary)">software program that can think, decide, and act on its own</strong> to complete tasks for you. Think of it like a digital employee — you give it a goal (like "process these invoices" or "find the best price for this product"), and it figures out the steps, uses the right tools, and gets it done. Unlike simple automation that follows a fixed script, an agent can <strong style="color:var(--text-primary)">adapt, learn from results, and make decisions</strong> when unexpected situations come up.</p>
+            <p class="hero-text" style="font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:800px">An AI Agent is a <strong style="color:var(--text-primary)">software program that can think, decide, and act on its own</strong> to complete tasks for you. Think of it like a digital employee — you give it a goal (like "process these invoices" or "find the best price for this product"), and it figures out the steps, uses the right tools, and gets it done. Unlike simple automation that follows a fixed script, an agent can <strong style="color:var(--text-primary)">adapt, learn from results, and make decisions</strong> when unexpected situations come up.</p>
         </div>
 
         <!-- Agent Types Grid -->
         <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:16px">Types of AI Agents</h4>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px" id="agent-types-grid"></div>
+        <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px" id="agent-types-grid"></div>
 
         <!-- How It Works - Workflow -->
         <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">How an Agent Works — From Request to Result</h4>
@@ -195,33 +255,33 @@
 
         <!-- Workflow Diagram -->
         <div class="card" style="padding:24px;margin-bottom:24px;overflow-x:auto">
-            <div style="display:flex;align-items:stretch;gap:0;min-width:900px" id="workflow-steps"></div>
+            <div class="workflow-row" style="display:flex;align-items:stretch;gap:0;min-width:900px" id="workflow-steps"></div>
         </div>
 
         <!-- Tools & Dependencies -->
         <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">Tools, Components &amp; Dependencies</h4>
         <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Every agent relies on these building blocks. Click any tool to learn what it does.</p>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px" id="tools-grid"></div>
+        <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px" id="tools-grid"></div>
 
         <!-- Key Concepts -->
         <h4 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent);margin-bottom:8px">Key Concepts</h4>
         <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Important ideas behind how agents think and operate.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="concepts-grid"></div>
+        <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="concepts-grid"></div>
     </section>
 
-    <section id="section-dashboard" style="padding:32px;display:none">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px" id="stats-row"></div>
+    <section id="section-dashboard" class="section-pad" style="padding:32px;display:none">
+        <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px" id="stats-row"></div>
         <div class="card" style="padding:24px;margin-bottom:32px">
             <h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent);margin-bottom:16px">Active Build Pipeline</h3>
             <div style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:8px" id="pipeline-bar"></div>
         </div>
         <h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent);margin-bottom:16px">Recently Deployed Agents</h3>
-        <div id="dashboard-agents" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+        <div id="dashboard-agents" class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
     </section>
 
-    <section id="section-agents" style="padding:32px;display:none">
+    <section id="section-agents" class="section-pad" style="padding:32px;display:none">
         <div style="margin-bottom:24px"><h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text-accent)">Agent Library</h3><p style="font-size:14px;color:var(--text-muted);margin-top:4px">Browse, configure, and deploy AI agents for every department</p></div>
-        <div style="display:flex;gap:24px;border-bottom:1px solid var(--border-main);margin-bottom:24px" id="category-tabs">
+        <div class="tab-scroll" style="display:flex;gap:24px;border-bottom:1px solid var(--border-main);margin-bottom:24px" id="category-tabs">
             <button onclick="filterAgents('all')" class="tab-active" data-filter="all" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-accent);font-family:inherit">All Agents</button>
             <button onclick="filterAgents('operations')" data-filter="operations" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Operations</button>
             <button onclick="filterAgents('finance')" data-filter="finance" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Finance</button>
@@ -229,18 +289,18 @@
             <button onclick="filterAgents('supply')" data-filter="supply" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Supply Chain</button>
             <button onclick="filterAgents('rnd')" data-filter="rnd" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">R&amp;D Innovation</button>
         </div>
-        <div id="agents-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+        <div id="agents-grid" class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
     </section>
 
-    <section id="section-pipeline" style="padding:32px;display:none">
+    <section id="section-pipeline" class="section-pad" style="padding:32px;display:none">
         <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text-accent);margin-bottom:8px">Build Pipeline</h3>
         <p style="font-size:14px;color:var(--text-muted);margin-bottom:32px">Agents progress through quality gates before deployment.</p>
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px" id="pipeline-board"></div>
+        <div class="grid-6" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px" id="pipeline-board"></div>
     </section>
 </main>
 
 <div id="modal-overlay" style="position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.6)" class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-main);border-radius:16px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.4)" onclick="event.stopPropagation()">
+    <div class="modal-content modal-inner" style="background:var(--bg-card);border:1px solid var(--border-main);border-radius:16px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.4)" onclick="event.stopPropagation()">
         <div id="modal-body"></div>
     </div>
 </div>
@@ -350,7 +410,7 @@ function renderAgentCard(a,i){
             <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;${statusDot[a.status]}"></span><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-muted)">${statusTxt[a.status]}</span></div>
         </div>
         <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px">${a.desc}</p>
-        <div style="display:flex;gap:8px">
+        <div class="agent-btns" style="display:flex;gap:8px">
             <button onclick='openAgentModal("info","${a.id}")' class="btn-ghost" style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>More Info</button>
             <button onclick='openAgentModal("security","${a.id}")' style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;background:var(--btn-security-bg);border:1px solid var(--btn-security-border);color:var(--btn-security-text);transition:all 0.2s"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Security</button>
             <button onclick='openAgentModal("cert","${a.id}")' style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;background:var(--btn-cert-bg);border:1px solid var(--btn-cert-border);color:var(--btn-cert-text);transition:all 0.2s"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Cert</button>
@@ -358,18 +418,22 @@ function renderAgentCard(a,i){
 }
 
 function switchSection(s){
-    ['learn','dashboard','agents','pipeline'].forEach(x=>{document.getElementById('section-'+x).style.display=x===s?'block':'none'});
-    document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('nav-active');n.style.color='var(--text-muted)'});
+    ["learn","dashboard","agents","pipeline"].forEach(x=>{document.getElementById("section-"+x).style.display=x===s?"block":"none"});
+    document.querySelectorAll(".nav-item").forEach(n=>{n.classList.remove("nav-active");n.style.color="var(--text-muted)"});
     const btn=document.querySelector(`.nav-item[data-section="${s}"]`);
-    if(btn){btn.classList.add('nav-active');btn.style.color='var(--text-primary)'}
-    document.getElementById('page-title').textContent={learn:'What Are AI Agents?',dashboard:'Agent Dashboard',agents:'Agent Library',pipeline:'Build Pipeline'}[s];
-    if(s==='agents')renderAgentsGrid(currentFilter);
+    if(btn){btn.classList.add("nav-active");btn.style.color="var(--text-primary)"}
+    document.getElementById("page-title").textContent={learn:"What Are AI Agents?",dashboard:"Agent Dashboard",agents:"Agent Library",pipeline:"Build Pipeline"}[s];
+    document.querySelectorAll("#mobile-nav button[data-mob]").forEach(b=>{b.classList.remove("mob-active")});
+    const mb=document.querySelector(`#mobile-nav button[data-mob="${s}"]`);
+    if(mb){mb.classList.add("mob-active");mb.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"})}
+    if(s==="agents")renderAgentsGrid(currentFilter);
+    window.scrollTo({top:0,behavior:"smooth"});
 }
 
 let currentFilter='all';
 function filterAgents(cat){
     currentFilter=cat;
-    if(document.getElementById('section-agents').style.display==='none')switchSection('agents');
+    if(document.getElementById('section-agents').style.display==='none') switchSection('agents');
     renderAgentsGrid(cat);
     document.querySelectorAll('#category-tabs button').forEach(t=>{t.classList.remove('tab-active');t.style.color='var(--text-muted)'});
     const at=document.querySelector(`#category-tabs button[data-filter="${cat}"]`);
@@ -470,7 +534,7 @@ function init(){
     ];
 
     document.getElementById('workflow-steps').innerHTML = workflowSteps.map((s,i) => {
-        const arrow = i < workflowSteps.length-1 ? `<div style="display:flex;align-items:center;padding:0 4px"><svg style="width:24px;height:24px;color:var(--text-dim);flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>` : '';
+        const arrow = i < workflowSteps.length-1 ? `<div style="display:flex;align-items:center;padding:0 4px"><svg class="wf-arrow" style="width:24px;height:24px;color:var(--text-dim);flex-shrink:0;transition:transform 0.3s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>` : '';
         return `<div style="display:flex;align-items:stretch;flex:1;gap:0"><button onclick='openConceptPopup("${s.label}: ${s.sub}","${s.desc.replace(/'/g,"\\'")}","${s.detail.replace(/'/g,"\\'")}","${s.related}")' style="flex:1;min-width:130px;background:var(--bg-card-inner);border:2px solid ${s.color}30;border-radius:12px;padding:16px;cursor:pointer;font-family:inherit;text-align:left;transition:all 0.25s;display:flex;flex-direction:column;gap:6px" onmouseover="this.style.borderColor='${s.color}';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='${s.color}30';this.style.transform='none'">
             <span style="font-size:24px">${s.icon}</span>
             <span style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${s.color}">Step ${i+1}</span>
