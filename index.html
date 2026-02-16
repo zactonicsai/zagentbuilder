@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zactonics AI Agent Platform</title>
+    <script src="tailwinds.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+
+        /* ── THEME VARIABLES ── */
+        :root {
+            --bg-body: #0b1210;
+            --bg-sidebar: rgba(8,14,11,0.95);
+            --bg-card: #131d18;
+            --bg-card-inner: rgba(255,255,255,0.04);
+            --bg-input: rgba(255,255,255,0.05);
+            --bg-hover: rgba(255,255,255,0.06);
+            --bg-badge: rgba(255,255,255,0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #e0e7e3;
+            --text-muted: #a3b5ab;
+            --text-dim: #7a9185;
+            --text-accent: #CCFF00;
+            --border-main: rgba(255,255,255,0.1);
+            --border-subtle: rgba(255,255,255,0.06);
+            --grid-color: rgba(204,255,0,0.04);
+            --toggle-bg: #1a3a2a;
+            --toggle-dot: #CCFF00;
+            --toggle-tx: 0px;
+            --nav-accent: #CCFF00;
+            --tag-blue-bg: rgba(96,165,250,0.12); --tag-blue-text: #93c5fd;
+            --tag-emerald-bg: rgba(52,211,153,0.12); --tag-emerald-text: #6ee7b7;
+            --tag-amber-bg: rgba(251,191,36,0.12); --tag-amber-text: #fcd34d;
+            --tag-rose-bg: rgba(251,113,133,0.12); --tag-rose-text: #fda4af;
+            --tag-purple-bg: rgba(167,139,250,0.12); --tag-purple-text: #c4b5fd;
+            --btn-security-bg: rgba(16,185,129,0.12); --btn-security-border: rgba(16,185,129,0.25); --btn-security-text: #34d399;
+            --btn-cert-bg: rgba(167,139,250,0.12); --btn-cert-border: rgba(167,139,250,0.25); --btn-cert-text: #a78bfa;
+            --accent-green: #34d399; --accent-blue: #60a5fa; --accent-amber: #fbbf24; --accent-purple: #a78bfa;
+        }
+        [data-theme="light"] {
+            --bg-body: #f8faf9;
+            --bg-sidebar: rgba(255,255,255,0.95);
+            --bg-card: #ffffff;
+            --bg-card-inner: #f2f5f3;
+            --bg-input: #ffffff;
+            --bg-hover: #e8ede9;
+            --bg-badge: #e2e8e4;
+            --text-primary: #0a0a0a;
+            --text-secondary: #1a1a1a;
+            --text-muted: #3d3d3d;
+            --text-dim: #666666;
+            --text-accent: #065f46;
+            --border-main: rgba(0,0,0,0.15);
+            --border-subtle: rgba(0,0,0,0.08);
+            --grid-color: rgba(4,120,87,0.05);
+            --toggle-bg: #bbf7d0;
+            --toggle-dot: #047857;
+            --toggle-tx: 28px;
+            --nav-accent: #047857;
+            --tag-blue-bg: #dbeafe; --tag-blue-text: #1e3a5f;
+            --tag-emerald-bg: #d1fae5; --tag-emerald-text: #064e3b;
+            --tag-amber-bg: #fef3c7; --tag-amber-text: #7c2d12;
+            --tag-rose-bg: #ffe4e6; --tag-rose-text: #881337;
+            --tag-purple-bg: #ede9fe; --tag-purple-text: #4c1d95;
+            --btn-security-bg: rgba(5,150,105,0.1); --btn-security-border: rgba(5,150,105,0.3); --btn-security-text: #065f46;
+            --btn-cert-bg: rgba(109,40,217,0.08); --btn-cert-border: rgba(109,40,217,0.25); --btn-cert-text: #4c1d95;
+            --accent-green: #047857; --accent-blue: #1d4ed8; --accent-amber: #b45309; --accent-purple: #6d28d9;
+        }
+
+        body{font-family:'Outfit',sans-serif;background:var(--bg-body);color:var(--text-primary);min-height:100vh;transition:background 0.4s,color 0.4s}
+
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-main);border-radius:3px}
+
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(204,255,0,0.12)}50%{box-shadow:0 0 35px rgba(204,255,0,0.25)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes grid-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+
+        .animate-pulse-glow{animation:pulse-glow 3s ease-in-out infinite}
+        .animate-slide-up{animation:slide-up 0.5s ease-out forwards}
+
+        .bg-grid{background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:40px 40px;animation:grid-pulse 8s ease-in-out infinite}
+
+        .agent-card{transition:all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;overflow:hidden}
+        .agent-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(204,255,0,0.04),transparent);transition:left 0.6s ease}
+        .agent-card:hover::before{left:100%}.agent-card:hover{transform:translateY(-4px)}
+
+        .theme-toggle{position:relative;width:56px;height:28px;border-radius:14px;cursor:pointer;transition:all 0.3s ease;background:var(--toggle-bg)}
+        .theme-toggle .toggle-dot{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;transition:all 0.3s ease;background:var(--toggle-dot);transform:translateX(var(--toggle-tx))}
+
+        .modal-overlay{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+        .modal-content{animation:slide-up 0.3s ease-out}
+
+        .nav-active{position:relative}
+        .nav-active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--nav-accent);border-radius:0 3px 3px 0}
+
+        .tab-active{border-bottom:2px solid var(--text-accent)!important;color:var(--text-accent)!important}
+
+        .tag-pill{font-size:0.65rem;padding:2px 8px;border-radius:9999px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600}
+        .tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue-text)}
+        .tag-emerald{background:var(--tag-emerald-bg);color:var(--tag-emerald-text)}
+        .tag-amber{background:var(--tag-amber-bg);color:var(--tag-amber-text)}
+        .tag-rose{background:var(--tag-rose-bg);color:var(--tag-rose-text)}
+        .tag-purple{background:var(--tag-purple-bg);color:var(--tag-purple-text)}
+
+        /* Utility classes using CSS vars */
+        .card{background:var(--bg-card);border:1px solid var(--border-main);border-radius:1rem;transition:background 0.4s,border-color 0.4s}
+        .card-inner{background:var(--bg-card-inner);border-radius:0.75rem;padding:1rem}
+        .t1{color:var(--text-primary)}.t2{color:var(--text-secondary)}.t3{color:var(--text-muted)}.t4{color:var(--text-dim)}
+        .ta{color:var(--text-accent)}
+        .b-main{border-color:var(--border-main)}.b-sub{border-color:var(--border-subtle)}
+        .bg-h:hover{background:var(--bg-hover)}
+        .btn-ghost{background:var(--bg-input);border:1px solid var(--border-main);color:var(--text-secondary);transition:all 0.2s}
+        .btn-ghost:hover{background:var(--bg-hover);color:var(--text-primary)}
+    </style>
+</head>
+<body data-theme="dark">
+
+<aside style="position:fixed;left:0;top:0;bottom:0;width:256px;background:var(--bg-sidebar);backdrop-filter:blur(20px);border-right:1px solid var(--border-main);z-index:50;display:flex;flex-direction:column;transition:background 0.4s">
+    <div style="padding:24px;border-bottom:1px solid var(--border-main)">
+        <div style="display:flex;align-items:center;gap:12px">
+            <div class="animate-pulse-glow" style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CCFF00,#10b981);display:flex;align-items:center;justify-content:center">
+                <svg style="width:24px;height:24px;color:#022c22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+                <h1 style="font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--text-accent);line-height:1.2">Zactonics</h1>
+                <p style="font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted)">AI Agent Platform</p>
+            </div>
+        </div>
+    </div>
+    <nav style="flex:1;padding:16px 0;overflow-y:auto">
+        <p style="padding:0 24px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Workspace</p>
+        <button onclick="switchSection('dashboard')" class="nav-item nav-active" data-section="dashboard" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-primary);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
+            <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>Dashboard
+        </button>
+        <button onclick="switchSection('agents')" class="nav-item" data-section="agents" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
+            <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>Agent Library
+        </button>
+        <button onclick="switchSection('pipeline')" class="nav-item" data-section="pipeline" style="width:100%;text-align:left;padding:10px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit;transition:background 0.2s" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='none'">
+            <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>Build Pipeline
+        </button>
+        <p style="padding:0 24px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin:20px 0 8px">Categories</p>
+        <button onclick="filterAgents('all')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#CCFF00"></span>All Agents</button>
+        <button onclick="filterAgents('operations')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#60a5fa"></span>Operations</button>
+        <button onclick="filterAgents('finance')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#34d399"></span>Finance</button>
+        <button onclick="filterAgents('sales')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#fbbf24"></span>Sales &amp; Marketing</button>
+        <button onclick="filterAgents('supply')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#fb7185"></span>Supply Chain</button>
+        <button onclick="filterAgents('rnd')" style="width:100%;text-align:left;padding:8px 24px;display:flex;align-items:center;gap:12px;color:var(--text-muted);background:none;border:none;font-size:14px;cursor:pointer;font-family:inherit"><span style="width:8px;height:8px;border-radius:50%;background:#a78bfa"></span>R&amp;D Innovation</button>
+    </nav>
+    <div style="padding:16px;border-top:1px solid var(--border-main)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7B61FF,#10b981);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">ZA</div>
+                <div><p style="font-size:12px;font-weight:500">Zac Admin</p><p style="font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">Enterprise</p></div>
+            </div>
+            <div class="theme-toggle" onclick="toggleTheme()"><div class="toggle-dot"></div></div>
+        </div>
+    </div>
+</aside>
+
+<main style="margin-left:256px;min-height:100vh" class="bg-grid">
+    <header style="position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg-body) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-main);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s">
+        <div><h2 style="font-size:18px;font-weight:600" id="page-title">Agent Dashboard</h2><p style="font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.05em">Build · Deploy · Monitor · Certify</p></div>
+        <div style="display:flex;align-items:center;gap:16px">
+            <div style="position:relative">
+                <input type="text" placeholder="Search agents..." id="search-input" oninput="handleSearch(this.value)" style="background:var(--bg-input);border:1px solid var(--border-main);border-radius:8px;padding:8px 40px 8px 16px;font-size:14px;width:256px;outline:none;color:var(--text-primary);font-family:inherit;transition:background 0.3s,border 0.3s">
+                <svg style="width:16px;height:16px;position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-muted)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <button onclick="openModal('deploy')" style="background:linear-gradient(135deg,#CCFF00,#34d399);color:#022c22;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit">
+                <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New Agent
+            </button>
+        </div>
+    </header>
+
+    <section id="section-dashboard" style="padding:32px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px" id="stats-row"></div>
+        <div class="card" style="padding:24px;margin-bottom:32px">
+            <h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent);margin-bottom:16px">Active Build Pipeline</h3>
+            <div style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:8px" id="pipeline-bar"></div>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent);margin-bottom:16px">Recently Deployed Agents</h3>
+        <div id="dashboard-agents" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+    </section>
+
+    <section id="section-agents" style="padding:32px;display:none">
+        <div style="margin-bottom:24px"><h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text-accent)">Agent Library</h3><p style="font-size:14px;color:var(--text-muted);margin-top:4px">Browse, configure, and deploy AI agents for every department</p></div>
+        <div style="display:flex;gap:24px;border-bottom:1px solid var(--border-main);margin-bottom:24px" id="category-tabs">
+            <button onclick="filterAgents('all')" class="tab-active" data-filter="all" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-accent);font-family:inherit">All Agents</button>
+            <button onclick="filterAgents('operations')" data-filter="operations" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Operations</button>
+            <button onclick="filterAgents('finance')" data-filter="finance" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Finance</button>
+            <button onclick="filterAgents('sales')" data-filter="sales" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Sales &amp; Marketing</button>
+            <button onclick="filterAgents('supply')" data-filter="supply" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">Supply Chain</button>
+            <button onclick="filterAgents('rnd')" data-filter="rnd" style="padding-bottom:12px;font-size:14px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text-muted);font-family:inherit">R&amp;D Innovation</button>
+        </div>
+        <div id="agents-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+    </section>
+
+    <section id="section-pipeline" style="padding:32px;display:none">
+        <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text-accent);margin-bottom:8px">Build Pipeline</h3>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:32px">Agents progress through quality gates before deployment.</p>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px" id="pipeline-board"></div>
+    </section>
+</main>
+
+<div id="modal-overlay" style="position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.6)" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-main);border-radius:16px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,0.4)" onclick="event.stopPropagation()">
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+const linkInfo = {
+    'https://aicert.org': {name:'AI Certification Institute',desc:'Independent global body that certifies AI systems for safety, accuracy, and ethical compliance. Provides third-party validation of AI agent performance through rigorous testing protocols and ongoing monitoring programs.',services:'AI Safety Certification, Bias Auditing, Performance Benchmarking, Continuous Monitoring'},
+    'https://soc2.org': {name:'SOC 2 Compliance Standards',desc:'Service Organization Control 2 (SOC 2) is a framework developed by the AICPA for managing customer data based on five trust service criteria: security, availability, processing integrity, confidentiality, and privacy.',services:'SOC 2 Type I & II Audits, Trust Service Criteria Assessment, Compliance Reporting'},
+    'https://shrm.org': {name:'Society for Human Resource Management',desc:'SHRM is the world\'s largest HR professional society, providing resources, certification, and best practices for human resource management and workplace compliance.',services:'HR Certification (SHRM-CP/SCP), Compliance Toolkits, Workplace Policy Guidance'},
+    'https://eeoc.gov': {name:'U.S. Equal Employment Opportunity Commission',desc:'Federal agency that enforces laws against workplace discrimination. Ensures AI hiring and HR tools comply with Title VII, ADA, ADEA, and other federal anti-discrimination statutes.',services:'Discrimination Complaint Investigation, Employer Compliance Guidance, AI Hiring Tool Audits'},
+    'https://sec.gov': {name:'U.S. Securities and Exchange Commission',desc:'Federal regulatory body overseeing securities markets. Ensures financial AI tools comply with regulations including Regulation FD, Dodd-Frank, and reporting requirements for public companies.',services:'Financial Reporting Standards, Market Surveillance, Investment Advisor Compliance'},
+    'https://ftc.gov': {name:'Federal Trade Commission',desc:'Protects consumers and promotes competition. Oversees AI advertising claims, endorsement guidelines, antitrust compliance, and consumer data protection practices.',services:'Consumer Protection Enforcement, Antitrust Review, Advertising Standards, AI Transparency Guidelines'},
+    'https://aicpa.org': {name:'American Institute of CPAs',desc:'National professional organization of Certified Public Accountants. Develops auditing standards including SOC for AI, and provides frameworks for assuring AI-generated financial outputs.',services:'SOC for AI Framework, Auditing Standards, CPA Certification, Financial AI Assurance'},
+    'https://pcaobus.org': {name:'Public Company Accounting Oversight Board',desc:'Nonprofit corporation established by Congress to oversee audits of public companies. Sets auditing standards relevant to AI systems that produce financial reports.',services:'Audit Standards, Inspection Programs, Quality Control Standards'},
+    'https://irs.gov': {name:'Internal Revenue Service',desc:'Federal tax collection agency. Authorized e-file provider program validates that tax preparation AI agents meet IRS security and accuracy standards for electronic filing.',services:'e-File Authorization, Tax Code Compliance, Electronic Filing Standards, Taxpayer Data Security'},
+    'https://tax.org': {name:'Tax Foundation',desc:'Independent tax policy nonprofit providing data-driven research on tax policy. Used to validate AI tax strategy recommendations against established economic research.',services:'Tax Policy Research, State Tax Comparisons, Economic Impact Analysis'},
+    'https://pcisecuritystandards.org': {name:'PCI Security Standards Council',desc:'Global forum for developing payment account data security standards. PCI DSS Level 1 certification ensures AI invoice and payment systems meet the highest security requirements.',services:'PCI DSS Certification, Payment Security Assessments, Compliance Validation, Security Training'},
+    'https://ifo.org': {name:'Institute of Financial Operations',desc:'Professional organization advancing best practices in financial operations including accounts payable, accounts receivable, and payment processing automation.',services:'AP/AR Best Practices, Certification Programs, Process Automation Standards'},
+    'https://forrester.com': {name:'Forrester Research',desc:'Global research and advisory firm providing analysis of technology trends and buyer behavior. Independently validates AI sales tools through rigorous methodology.',services:'Technology Research, Vendor Evaluations (Wave/Forrester Wave), ROI Analysis, Market Forecasting'},
+    'https://dmi.org': {name:'Digital Marketing Institute',desc:'Global standard in digital marketing certification. Validates AI marketing tools against industry benchmarks and best practices for campaign management.',services:'Digital Marketing Certification, Campaign Benchmarking, Industry Standards'},
+    'https://bain.com': {name:'Bain & Company',desc:'Global management consulting firm. Their pricing practice provides independent validation of AI pricing optimization tools and competitive strategy analysis.',services:'Pricing Strategy Consulting, Market Analysis, Competitive Benchmarking'},
+    'https://apics.org': {name:'APICS Supply Chain Council',desc:'Premier professional association for supply chain management. Provides CPIM and CSCP certifications and validates AI supply chain tools against industry standards.',services:'CPIM/CSCP Certification, Supply Chain Best Practices, Demand Planning Standards'},
+    'https://fda.gov': {name:'U.S. Food & Drug Administration',desc:'Federal agency regulating food, drugs, medical devices, and more. 21 CFR Part 11 compliance ensures AI systems handling regulated goods meet electronic records requirements.',services:'21 CFR Part 11 Compliance, Drug/Device Regulation, AI/ML Medical Device Framework'},
+    'https://cips.org': {name:'Chartered Institute of Procurement & Supply',desc:'Global body for procurement and supply professionals. Provides ethics codes and standards that validate AI procurement tools for fairness and transparency.',services:'Procurement Certification, Ethical Sourcing Standards, Supply Chain Risk Assessment'},
+    'https://cpsc.gov': {name:'Consumer Product Safety Commission',desc:'Federal agency protecting the public from unreasonable risks of injury from consumer products. AI product selection tools integrate CPSC safety databases.',services:'Product Safety Database, Recall Monitoring, Safety Standards Compliance'},
+    'https://retailai.org': {name:'Retail AI Standards Board',desc:'Industry consortium establishing standards for AI applications in retail. Provides testing frameworks and certification for product selection and merchandising AI.',services:'Retail AI Certification, Product Mix Optimization Standards, Fairness Testing'},
+    'https://planning.org': {name:'American Planning Association',desc:'Professional organization for urban planners. Their AI division validates city planning tools against evidence-based planning principles and community impact standards.',services:'Planning Certification (AICP), Smart City Standards, Community Impact Frameworks'},
+    'https://hud.gov': {name:'U.S. Dept. of Housing & Urban Development',desc:'Federal agency responsible for housing policy and fair housing enforcement. Ensures AI planning tools comply with Fair Housing Act and equitable development standards.',services:'Fair Housing Compliance, Community Development Standards, Equitable Planning Guidelines'},
+    'https://strategicmanagement.net': {name:'Strategic Management Society',desc:'International society for the advancement of strategic management. Validates AI business development tools against peer-reviewed strategic management research.',services:'Strategy Research Validation, Market Entry Frameworks, Competitive Analysis Standards'},
+    'https://cfainstitute.org': {name:'CFA Institute',desc:'Global association of investment professionals. Their AI Investment Tools Standards ensure AI analysts meet the same ethical and analytical rigor as human CFA charterholders.',services:'CFA Charterholder Standards, AI Investment Tool Certification, Ethics Code Compliance'},
+    'https://nih.gov': {name:'National Institutes of Health',desc:'Primary federal agency for biomedical and public health research. NCATS validation program tests AI research tools against published scientific literature.',services:'Research Validation Programs, Clinical Trial Database, Genomic Data Standards'},
+    'https://aia.org': {name:'American Institute of Architects',desc:'Professional organization for architects. Their technology division certifies AI architecture tools meet building code requirements and structural safety standards.',services:'Architectural Standards, Building Code Compliance, Sustainable Design Certification'},
+    'https://usgbc.org': {name:'U.S. Green Building Council',desc:'Organization behind LEED certification. Validates that AI architecture tools properly optimize for energy efficiency, sustainability, and environmental impact.',services:'LEED Certification Standards, Green Building Guidelines, Energy Efficiency Benchmarks'},
+    'https://ite.org': {name:'Institute of Transportation Engineers',desc:'Professional society for transportation professionals. Certifies AI traffic management tools through real-world corridor testing and safety impact analysis.',services:'Traffic Engineering Standards, Signal Timing Certification, Safety Analysis'},
+    'https://fhwa.dot.gov': {name:'Federal Highway Administration',desc:'Division of the U.S. DOT that provides stewardship over highway transportation. Sets standards for traffic management systems including AI-based optimization.',services:'Highway Safety Standards, Traffic Management Guidelines, Infrastructure Planning'},
+    'https://himss.org': {name:'HIMSS — Healthcare Information & Management',desc:'Global organization focused on health information and technology. Certifies AI hospital management tools for interoperability, security, and patient safety.',services:'Healthcare IT Certification, Interoperability Standards, Patient Safety Frameworks'},
+    'https://jointcommission.org': {name:'The Joint Commission',desc:'Independent organization that accredits and certifies healthcare facilities. AI hospital operations tools must align with Joint Commission patient safety standards.',services:'Hospital Accreditation, Patient Safety Goals, Quality Improvement Standards'},
+    'https://soa.org': {name:'Society of Actuaries',desc:'Professional organization for actuaries. Their Health Section AI Standards validate healthcare cost analysis tools against actuarial best practices.',services:'Actuarial Certification, Health Cost Modeling Standards, Risk Assessment Frameworks'},
+    'https://cms.gov': {name:'Centers for Medicare & Medicaid Services',desc:'Federal agency administering Medicare, Medicaid, and ACA marketplace. Sets data standards and reporting requirements for healthcare cost analysis tools.',services:'Healthcare Data Standards, Reporting Requirements, Claims Processing Guidelines'},
+    'https://theiacp.org': {name:'Intl. Association of Chiefs of Police',desc:'World\'s largest professional association for police leaders. Their AI Ethics Board certifies crime prevention tools for bias-free operation and civil liberties protection.',services:'AI Ethics Certification, Bias Auditing Standards, Community Policing Guidelines'},
+    'https://vera.org': {name:'Vera Institute of Justice',desc:'National research and policy organization working to improve justice systems. Independently audits AI crime prevention tools for fairness and racial equity.',services:'Justice System Research, Bias Impact Assessments, Community Safety Evaluations'},
+    'https://iste.org': {name:'Intl. Society for Technology in Education',desc:'Professional organization for educators focused on using technology to accelerate innovation in education. Certifies AI tutoring tools for pedagogical effectiveness.',services:'EdTech Standards, Digital Learning Certification, Classroom Pilot Programs'},
+    'https://ed.gov': {name:'U.S. Department of Education',desc:'Federal agency administering education policy. FERPA compliance ensures AI education tools properly protect student privacy and educational records.',services:'FERPA Compliance, Student Privacy Standards, Educational Research Guidelines'},
+};
+
+function openLinkPopup(url) {
+    const info = linkInfo[url] || {name: url.replace('https://',''), desc:'External verification and audit service for AI agent compliance and certification.', services:'Compliance Verification, Audit Services'};
+    const o = document.getElementById('modal-overlay'), b = document.getElementById('modal-body');
+    o.style.display = 'flex';
+    const cb = `<button onclick="closeModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:20px">✕</button>`;
+    b.innerHTML = `<div style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center"><svg style="width:20px;height:20px;color:#fff" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></div>
+                <div><h3 style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text-accent)">${info.name}</h3><p style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${url.replace('https://','')}</p></div>
+            </div>
+            ${cb}
+        </div>
+        <div style="background:var(--bg-card-inner);border-radius:12px;padding:16px;margin-bottom:16px">
+            <p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:8px">About This Organization</p>
+            <p style="font-size:14px;color:var(--text-primary);line-height:1.6">${info.desc}</p>
+        </div>
+        <div style="background:var(--bg-card-inner);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #3b82f6">
+            <p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-blue);margin-bottom:8px">Key Services & Standards</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">${info.services.split(', ').map(s => `<span style="font-size:12px;padding:4px 10px;border-radius:6px;background:var(--bg-hover);border:1px solid var(--border-subtle);color:var(--text-secondary)">${s}</span>`).join('')}</div>
+        </div>
+        <div style="background:var(--bg-card-inner);border-radius:12px;padding:16px;border-left:4px solid var(--accent-green)">
+            <p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-green);margin-bottom:8px">How Zactonics Uses This</p>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.5">Zactonics AI agents are validated against standards set by ${info.name}. Results are independently verified, audit logs are maintained, and compliance certificates are renewed on a regular cycle to ensure ongoing alignment with evolving requirements.</p>
+        </div>
+    </div>`;
+}
+
+const agents=[
+{id:'ops-1',name:'TaskFlow Manager',category:'operations',status:'active',icon:'⚙️',tagColor:'blue',tag:'Operations',desc:'Automates daily task assignment, priority scheduling, and workflow orchestration across all departments. Learns team capacity and adapts distribution in real time.',security:{encryption:'AES-256 end-to-end encryption for all task data',access:'Role-based access control (RBAC) with multi-factor authentication',audit:'Complete audit trail of every task creation, modification, and deletion',compliance:'SOC 2 Type II compliant, GDPR data handling'},certification:{body:'AI Operations Council (AIOC)',method:'Tested across 10,000+ simulated business workflows with 99.7% accuracy',version:'Certified v3.2 — March 2025',auditors:['Deloitte AI Assurance','KPMG Digital Trust']},links:['https://aicert.org','https://soc2.org']},
+{id:'ops-2',name:'HR Onboarding Agent',category:'operations',status:'active',icon:'👤',tagColor:'blue',tag:'Operations',desc:'Guides new employees through onboarding checklists, documentation, benefit enrollment, and compliance training. Integrates with HRIS systems.',security:{encryption:'PII encrypted at rest and in transit using TLS 1.3',access:'HR-only data partitioning with least-privilege access',audit:'All employee data access logged and reviewed quarterly',compliance:'EEOC, ADA, and local labor law compliance built-in'},certification:{body:'HR Technology Certification Institute',method:'Validated against 500+ onboarding scenarios across industries',version:'Certified v2.1 — Jan 2025',auditors:['PwC People Analytics','Mercer HR Consulting']},links:['https://shrm.org','https://eeoc.gov']},
+{id:'ops-3',name:'Compliance Monitor',category:'operations',status:'active',icon:'📋',tagColor:'blue',tag:'Operations',desc:'Continuously monitors business operations for regulatory compliance, flags potential violations, and generates real-time compliance reports for auditors.',security:{encryption:'Zero-knowledge architecture — data processed but never stored',access:'Regulator-grade access controls with IP whitelisting',audit:'Immutable compliance logs on blockchain-anchored ledger',compliance:'SEC, FTC, OSHA, and EPA requirements'},certification:{body:'National Compliance Officers Association',method:'Stress-tested with 50,000+ regulatory scenarios',version:'Certified v4.0 — Feb 2025',auditors:['Ernst & Young Compliance','Grant Thornton Advisory']},links:['https://sec.gov','https://ftc.gov']},
+{id:'fin-1',name:'BookKeeper AI',category:'finance',status:'active',icon:'📊',tagColor:'emerald',tag:'Finance',desc:'Automates accounts payable/receivable, bank reconciliation, and general ledger management. Categorizes transactions with 99.4% accuracy and generates real-time P&L.',security:{encryption:'Bank-grade AES-256 encryption with HSM key management',access:'Dual-authorization for transactions above configurable thresholds',audit:'SOX-compliant audit trail with tamper-proof logging',compliance:'GAAP and IFRS compliant output formatting'},certification:{body:'AICPA — SOC for AI',method:'Tested against 2M+ real transaction datasets with CPA oversight',version:'Certified v5.1 — Dec 2024',auditors:['Deloitte Financial Advisory','BDO USA Audit']},links:['https://aicpa.org','https://pcaobus.org']},
+{id:'fin-2',name:'Tax Strategy Agent',category:'finance',status:'active',icon:'🧾',tagColor:'emerald',tag:'Finance',desc:'Analyzes financial data to identify tax optimization opportunities, prepares quarterly estimates, and ensures compliance with federal, state, and local tax codes.',security:{encryption:'End-to-end encryption with geographic data residency controls',access:'CPA/CFO-only access with biometric verification',audit:'Every tax calculation logged with full methodology trace',compliance:'IRS e-file compatible, state nexus analysis built-in'},certification:{body:'IRS Authorized e-File Provider Program',method:'Validated against 100,000+ tax returns across all 50 states',version:'Certified v3.0 — Jan 2025',auditors:['KPMG Tax Advisory','RSM US Tax Practice']},links:['https://irs.gov','https://tax.org']},
+{id:'fin-3',name:'Invoice Processor',category:'finance',status:'active',icon:'🧮',tagColor:'emerald',tag:'Finance',desc:'OCR-powered invoice ingestion, automatic 3-way matching, approval routing, and payment scheduling. Detects duplicates and flags pricing anomalies.',security:{encryption:'Document-level encryption with vendor-specific access tokens',access:'Approval workflows enforced at system level — no bypass',audit:'Full document lifecycle tracking from receipt to payment',compliance:'PCI DSS Level 1 for payment data handling'},certification:{body:'Institute of Financial Operations',method:'Processed 5M+ test invoices with <0.1% error rate',version:'Certified v2.4 — Feb 2025',auditors:['Accenture Finance Advisory','Protiviti Internal Audit']},links:['https://pcisecuritystandards.org','https://ifo.org']},
+{id:'sal-1',name:'Lead Scoring Engine',category:'sales',status:'active',icon:'🎯',tagColor:'amber',tag:'Sales & Marketing',desc:'Analyzes prospect behavior, firmographic data, and engagement signals to score and prioritize leads. Auto-routes high-value prospects to senior reps.',security:{encryption:'Customer data encrypted with per-tenant isolation',access:'Sales team access scoped to assigned territories only',audit:'Every lead score change logged with contributing factors',compliance:'CAN-SPAM, CCPA, and GDPR consent management'},certification:{body:'Sales AI Certification Board',method:'A/B tested against 50,000+ sales outcomes for accuracy',version:'Certified v3.5 — Jan 2025',auditors:['McKinsey Sales Analytics','Forrester Research']},links:['https://forrester.com','https://ftc.gov']},
+{id:'sal-2',name:'Campaign Architect',category:'sales',status:'active',icon:'📣',tagColor:'amber',tag:'Sales & Marketing',desc:'Designs and optimizes multi-channel marketing campaigns. Uses A/B testing and real-time engagement analytics to maximize ROI across email, social, and paid.',security:{encryption:'Creative assets and audience data encrypted at rest',access:'Campaign approval gates with manager sign-off',audit:'Complete campaign history with version control',compliance:'FTC endorsement guidelines, platform ad policies'},certification:{body:'Digital Marketing Institute',method:'Benchmarked against 1,000+ campaigns with 34% avg. ROI lift',version:'Certified v2.8 — Nov 2024',auditors:['Gartner Digital Markets','HubSpot Validation']},links:['https://dmi.org','https://ftc.gov']},
+{id:'sal-3',name:'Pricing Optimizer',category:'sales',status:'active',icon:'💲',tagColor:'amber',tag:'Sales & Marketing',desc:'Dynamically adjusts product pricing based on demand signals, competitor analysis, inventory levels, and margin targets. Supports promotional pricing.',security:{encryption:'Pricing algorithms and margin data in encrypted sandbox',access:'Pricing authority restricted to finance and product leads',audit:'All price changes logged with economic justification',compliance:'Robinson-Patman Act and MAP policy enforcement'},certification:{body:'Pricing Strategy Council',method:'Simulated 10M+ pricing scenarios across verticals',version:'Certified v4.1 — Feb 2025',auditors:['Bain Pricing Practice','Simon-Kucher & Partners']},links:['https://ftc.gov','https://bain.com']},
+{id:'sup-1',name:'Inventory Oracle',category:'supply',status:'active',icon:'📦',tagColor:'rose',tag:'Supply Chain',desc:'Predicts demand, optimizes reorder points, and manages safety stock across warehouses. Reduces carrying costs while maintaining 99.5%+ fill rates.',security:{encryption:'Supply chain data encrypted with vendor-partitioned access',access:'Warehouse-level permissions with supplier read-only portals',audit:'Every inventory adjustment tracked with timestamp and source',compliance:'FDA 21 CFR Part 11 for regulated goods'},certification:{body:'APICS Supply Chain Council',method:'Tested across 200+ SKU portfolios with seasonal demand',version:'Certified v3.3 — Jan 2025',auditors:['Accenture Supply Chain','Gartner Research']},links:['https://apics.org','https://fda.gov']},
+{id:'sup-2',name:'Procurement Agent',category:'supply',status:'active',icon:'🤝',tagColor:'rose',tag:'Supply Chain',desc:'Automates purchase orders, vendor selection, RFQ management, and contract negotiation. Analyzes supplier performance and finds cost-saving alternatives.',security:{encryption:'Vendor contracts encrypted with access expiration',access:'Procurement authority limits per role and spend category',audit:'Full lifecycle from requisition to receipt documented',compliance:'Conflict minerals (Dodd-Frank 1502), modern slavery'},certification:{body:'CIPS — Chartered Institute of Procurement & Supply',method:'Validated across $500M+ in simulated transactions',version:'Certified v2.6 — Dec 2024',auditors:['Deloitte Procurement','Jaggaer Compliance']},links:['https://cips.org','https://sec.gov']},
+{id:'sup-3',name:'Product Selection AI',category:'supply',status:'testing',icon:'🔍',tagColor:'rose',tag:'Supply Chain',desc:'Analyzes market trends, customer preferences, and margin data to recommend optimal product mix. Identifies underperforming SKUs and new opportunities.',security:{encryption:'Market intelligence in isolated analytics environment',access:'Product team access with executive override',audit:'All recommendations logged with data sources cited',compliance:'CPSC database integration'},certification:{body:'Retail AI Standards Board',method:'Backtested against 5 years of retail performance data',version:'Pending v1.0 — In Testing',auditors:['Nielsen IQ Analytics','Boston Consulting Group']},links:['https://cpsc.gov','https://retailai.org']},
+{id:'rnd-1',name:'City Planner AI',category:'rnd',status:'active',icon:'🏙️',tagColor:'purple',tag:'R&D Innovation',desc:'Simulates urban development scenarios, analyzes zoning impact, and models infrastructure needs. Optimizes land use for sustainability and livability.',security:{encryption:'GIS and municipal data encrypted with gov-grade protocols',access:'Tiered: public data open, planning restricted to officials',audit:'Every simulation archived with full parameters',compliance:'HUD Fair Housing, ADA, EPA environmental review'},certification:{body:'American Planning Association — AI Division',method:'Validated against 50 real city master plans',version:'Certified v2.0 — Jan 2025',auditors:['WSP Global Urban Advisory','AECOM Planning']},links:['https://planning.org','https://hud.gov']},
+{id:'rnd-2',name:'BizDev Strategist',category:'rnd',status:'active',icon:'📈',tagColor:'purple',tag:'R&D Innovation',desc:'Identifies market opportunities, models competitive landscapes, and generates business development strategies for expansion planning.',security:{encryption:'Competitive intel in air-gapped analysis environment',access:'Executive and strategy team only with NDA enforcement',audit:'All analyses version-controlled with source attribution',compliance:'Antitrust safe-harbor analysis'},certification:{body:'Strategic Management Society — AI Standards',method:'Benchmarked against 200+ historical market entries',version:'Certified v1.8 — Dec 2024',auditors:['McKinsey Strategy','Bain & Company']},links:['https://strategicmanagement.net','https://ftc.gov']},
+{id:'rnd-3',name:'Investment Analyst',category:'rnd',status:'active',icon:'💎',tagColor:'purple',tag:'R&D Innovation',desc:'Evaluates investments using DCF modeling, comparable analysis, and risk-adjusted returns. Monitors portfolios and generates investor reports.',security:{encryption:'Financial models encrypted with FIPS 140-2 modules',access:'Investment committee with Chinese wall enforcement',audit:'Every model version tracked with assumptions',compliance:'SEC Regulation FD, Dodd-Frank, fiduciary duty'},certification:{body:'CFA Institute — AI Investment Tools Standards',method:'Backtested across 20 years with 94% directional accuracy',version:'Certified v3.1 — Feb 2025',auditors:['Goldman Sachs AM','Morningstar Research']},links:['https://cfainstitute.org','https://sec.gov']},
+{id:'rnd-4',name:'BioResearch Assistant',category:'rnd',status:'testing',icon:'🧬',tagColor:'purple',tag:'R&D Innovation',desc:'Accelerates literature review, identifies research gaps, and suggests experimental designs. Cross-references genomic databases and clinical trials.',security:{encryption:'Research data encrypted with HIPAA-compliant keys',access:'IRB-approved researcher access with data use agreements',audit:'Complete audit trail for regulatory submissions',compliance:'HIPAA, 21 CFR Part 11, GLP'},certification:{body:'FDA Digital Transformation — AI/ML Framework',method:'Validated against 10,000+ published papers',version:'Pending v1.0 — In Testing',auditors:['NIH NCATS Validation','WHO Digital Health']},links:['https://fda.gov','https://nih.gov']},
+{id:'rnd-5',name:'Architecture Researcher',category:'rnd',status:'active',icon:'🏗️',tagColor:'purple',tag:'R&D Innovation',desc:'Analyzes building performance, structural research, and sustainable design innovations. Generates parametric suggestions for energy efficiency.',security:{encryption:'Design files encrypted with project-level keys',access:'Licensed architect supervision required',audit:'All suggestions logged with engineering references',compliance:'IBC codes, LEED standards, ADA compliance'},certification:{body:'AIA — Technology Division',method:'Tested against 500+ real projects',version:'Certified v2.3 — Jan 2025',auditors:['Arup Engineering','SOM']},links:['https://aia.org','https://usgbc.org']},
+{id:'rnd-6',name:'Traffic Flow Optimizer',category:'rnd',status:'active',icon:'🚦',tagColor:'purple',tag:'R&D Innovation',desc:'Models traffic patterns, optimizes signal timing, and simulates infrastructure changes to reduce congestion and improve safety.',security:{encryption:'Traffic sensor data encrypted from IoT devices',access:'DOT and municipal traffic authority only',audit:'Signal changes logged with impact metrics',compliance:'MUTCD standards, FHWA guidelines, ADA pedestrian'},certification:{body:'Institute of Transportation Engineers',method:'12 test corridors, avg. 23% congestion reduction',version:'Certified v3.0 — Dec 2024',auditors:['Kimley-Horn','TRC Companies']},links:['https://ite.org','https://fhwa.dot.gov']},
+{id:'rnd-7',name:'Hospital Ops Manager',category:'rnd',status:'active',icon:'🏥',tagColor:'purple',tag:'R&D Innovation',desc:'Optimizes patient flow, bed allocation, staff scheduling, and resource utilization. Predicts admission surges and recommends capacity adjustments.',security:{encryption:'PHI encrypted with HIPAA AES-256 and de-identification',access:'Hospital admin; clinical data anonymized for AI',audit:'HL7 FHIR-compliant audit logging',compliance:'HIPAA, HITECH, Joint Commission'},certification:{body:'HIMSS — Healthcare AI Standards',method:'Validated across 25 hospitals, 18% efficiency gain',version:'Certified v2.7 — Jan 2025',auditors:['Epic Systems Validation','Leapfrog Safety']},links:['https://himss.org','https://jointcommission.org']},
+{id:'rnd-8',name:'Healthcare Cost Analyzer',category:'rnd',status:'active',icon:'💊',tagColor:'purple',tag:'R&D Innovation',desc:'Analyzes healthcare spending, identifies cost drivers, and models intervention strategies. Benchmarks costs against regional and national averages.',security:{encryption:'Claims data encrypted with CMS-grade protocols',access:'Actuarial team access with PHI de-identification',audit:'Every analysis archived with methodology',compliance:'CMS guidelines, ACA reporting, state insurance regs'},certification:{body:'Society of Actuaries — Health AI Standards',method:'Tested against $50B+ claims, 97% prediction accuracy',version:'Certified v1.5 — Feb 2025',auditors:['Milliman Health','Optum Advisory']},links:['https://soa.org','https://cms.gov']},
+{id:'rnd-9',name:'Crime Prevention Intel',category:'rnd',status:'active',icon:'🛡️',tagColor:'purple',tag:'R&D Innovation',desc:'Analyzes crime patterns, environmental factors, and community indicators to predict high-risk areas and recommend community-based prevention strategies.',security:{encryption:'Law enforcement data with CJIS-compliant protocols',access:'Authorized law enforcement and city officials only',audit:'Predictions logged with bias auditing and fairness metrics',compliance:'CJIS Security Policy, 4th Amendment, civil liberties'},certification:{body:'IACP — AI Ethics Board',method:'Independent bias audit and community impact assessment',version:'Certified v2.0 — Jan 2025',auditors:['RAND Corporation','Vera Institute of Justice']},links:['https://theiacp.org','https://vera.org']},
+{id:'rnd-10',name:'EduTech Tutor AI',category:'rnd',status:'testing',icon:'📚',tagColor:'purple',tag:'R&D Innovation',desc:'Personalizes learning paths for K-12 and higher ed, adapts content difficulty in real-time, and gives educators engagement and comprehension analytics.',security:{encryption:'Student data with FERPA-compliant key management',access:'Educator access with parent/guardian visibility',audit:'Complete learning interaction logs',compliance:'FERPA, COPPA (under-13), WCAG 2.1 accessibility'},certification:{body:'ISTE — Intl Society for Technology in Education',method:'Piloted in 100+ classrooms with measurable gains',version:'Pending v1.0 — In Pilot',auditors:['EDUCAUSE Review Board','Gates Foundation EdTech']},links:['https://iste.org','https://ed.gov']},
+];
+
+const pipelineData={intake:['Traffic Opt v3.1','EduTech v1.1'],training:['BioResearch v1.0','Product Select v1.0','Crime Prev v2.1'],testing:['HC Cost v1.6','Invoice v2.5','Lead Score v3.6','Procurement v2.7'],security:['Campaign v2.9','Hospital Ops v2.8'],cert:['Inventory v3.4'],deployed:['TaskFlow v3.2','BookKeeper v5.1','HR Onboard v2.1','Compliance v4.0','Tax v3.0','Pricing v4.1','City Plan v2.0','BizDev v1.8','Invest v3.1','Arch v2.3','Traffic v3.0','Hospital v2.7']};
+const tagMap={blue:'tag-blue',emerald:'tag-emerald',amber:'tag-amber',rose:'tag-rose',purple:'tag-purple'};
+const statusDot={active:'background:#34d399',testing:'background:#fbbf24'};
+const statusTxt={active:'Active',testing:'Testing'};
+function renderAgentCard(a,i){
+    return `<div class="agent-card card" style="padding:20px;opacity:0;animation:slide-up 0.5s ease-out ${i*0.05}s forwards">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:12px"><span style="font-size:24px">${a.icon}</span><div><h4 style="font-size:14px;font-weight:600;color:var(--text-primary)">${a.name}</h4><span class="tag-pill ${tagMap[a.tagColor]}">${a.tag}</span></div></div>
+            <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;${statusDot[a.status]}"></span><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-muted)">${statusTxt[a.status]}</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px">${a.desc}</p>
+        <div style="display:flex;gap:8px">
+            <button onclick='openAgentModal("info","${a.id}")' class="btn-ghost" style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>More Info</button>
+            <button onclick='openAgentModal("security","${a.id}")' style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;background:var(--btn-security-bg);border:1px solid var(--btn-security-border);color:var(--btn-security-text);transition:all 0.2s"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Security</button>
+            <button onclick='openAgentModal("cert","${a.id}")' style="flex:1;font-size:11px;font-weight:600;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;background:var(--btn-cert-bg);border:1px solid var(--btn-cert-border);color:var(--btn-cert-text);transition:all 0.2s"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Cert</button>
+        </div></div>`;
+}
+
+function switchSection(s){
+    ['dashboard','agents','pipeline'].forEach(x=>{document.getElementById('section-'+x).style.display=x===s?'block':'none'});
+    document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('nav-active');n.style.color='var(--text-muted)'});
+    const btn=document.querySelector(`.nav-item[data-section="${s}"]`);
+    if(btn){btn.classList.add('nav-active');btn.style.color='var(--text-primary)'}
+    document.getElementById('page-title').textContent={dashboard:'Agent Dashboard',agents:'Agent Library',pipeline:'Build Pipeline'}[s];
+    if(s==='agents')renderAgentsGrid(currentFilter);
+}
+
+let currentFilter='all';
+function filterAgents(cat){
+    currentFilter=cat;
+    if(document.getElementById('section-agents').style.display==='none')switchSection('agents');
+    renderAgentsGrid(cat);
+    document.querySelectorAll('#category-tabs button').forEach(t=>{t.classList.remove('tab-active');t.style.color='var(--text-muted)'});
+    const at=document.querySelector(`#category-tabs button[data-filter="${cat}"]`);
+    if(at){at.classList.add('tab-active');at.style.color='var(--text-accent)'}
+}
+function renderAgentsGrid(cat){
+    const f=cat==='all'?agents:agents.filter(a=>a.category===cat);
+    document.getElementById('agents-grid').innerHTML=f.map((a,i)=>renderAgentCard(a,i)).join('');
+}
+function handleSearch(v){
+    const q=v.toLowerCase();if(!q){renderAgentsGrid(currentFilter);return}
+    document.getElementById('agents-grid').innerHTML=agents.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q)||a.tag.toLowerCase().includes(q)).map((a,i)=>renderAgentCard(a,i)).join('');
+}
+function toggleTheme(){
+    const b=document.body;
+    b.dataset.theme=b.dataset.theme==='dark'?'light':'dark';
+}
+function closeModal(e){if(e&&e.target&&e.target.id!=='modal-overlay')return;document.getElementById('modal-overlay').style.display='none'}
+function openModal(type){
+    const o=document.getElementById('modal-overlay'),b=document.getElementById('modal-body');o.style.display='flex';
+    if(type==='deploy'){
+        b.innerHTML=`<div style="padding:24px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px"><h3 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent)">Deploy New Agent</h3><button onclick="closeModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:20px">✕</button></div><p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px">Select an agent template or create a custom agent. All agents must pass the full build pipeline.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px"><button style="text-align:left;padding:16px;border-radius:12px;border:1px solid var(--border-main);background:none;cursor:pointer;font-family:inherit;color:var(--text-primary)"><span style="font-size:18px">🧩</span><p style="font-size:14px;font-weight:600;margin-top:8px">From Template</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">Pre-built agent templates</p></button><button style="text-align:left;padding:16px;border-radius:12px;border:1px solid var(--border-main);background:none;cursor:pointer;font-family:inherit;color:var(--text-primary)"><span style="font-size:18px">⚡</span><p style="font-size:14px;font-weight:600;margin-top:8px">Custom Build</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">Define from scratch</p></button><button style="text-align:left;padding:16px;border-radius:12px;border:1px solid var(--border-main);background:none;cursor:pointer;font-family:inherit;color:var(--text-primary)"><span style="font-size:18px">📥</span><p style="font-size:14px;font-weight:600;margin-top:8px">Import Config</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">Upload config file</p></button><button style="text-align:left;padding:16px;border-radius:12px;border:1px solid var(--border-main);background:none;cursor:pointer;font-family:inherit;color:var(--text-primary)"><span style="font-size:18px">🔄</span><p style="font-size:14px;font-weight:600;margin-top:8px">Clone Existing</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">Duplicate deployed agent</p></button></div><div style="display:flex;justify-content:flex-end;gap:8px"><button onclick="closeModal()" style="padding:8px 16px;font-size:14px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-family:inherit">Cancel</button><button style="background:linear-gradient(135deg,#CCFF00,#34d399);color:#022c22;padding:8px 24px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:inherit">Continue</button></div></div>`;
+    }
+}
+function openAgentModal(type,id){
+    const a=agents.find(x=>x.id===id);if(!a)return;
+    const o=document.getElementById('modal-overlay'),b=document.getElementById('modal-body');o.style.display='flex';
+    const cb=`<button onclick="closeModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:20px">✕</button>`;
+    const ci=`background:var(--bg-card-inner);border-radius:12px;padding:16px;margin-bottom:12px`;
+    const lbl=`font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:6px`;
+    const val=`font-size:14px;color:var(--text-primary);line-height:1.5`;
+
+    if(type==='info'){
+        b.innerHTML=`<div style="padding:24px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px"><div style="display:flex;align-items:center;gap:12px"><span style="font-size:32px">${a.icon}</span><div><h3 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent)">${a.name}</h3><span class="tag-pill ${tagMap[a.tagColor]}">${a.tag}</span></div></div>${cb}</div>
+        <div style="${ci}"><p style="${lbl}">Description</p><p style="${val}">${a.desc}</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px"><div style="${ci}"><p style="${lbl}">Status</p><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;${statusDot[a.status]}"></span><span style="font-size:14px;font-weight:600;text-transform:capitalize">${a.status}</span></div></div><div style="${ci}"><p style="${lbl}">Category</p><span style="font-size:14px;font-weight:600">${a.tag}</span></div></div>
+        <div style="${ci}"><p style="${lbl}">Certification</p><p style="${val};font-weight:600">${a.certification.version}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">By: ${a.certification.body}</p></div>
+        <div style="display:flex;gap:8px;margin-top:16px"><button onclick='openAgentModal("security","${a.id}")' style="flex:1;background:linear-gradient(135deg,#059669,#10b981);color:#fff;padding:10px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:inherit">View Security</button><button onclick='openAgentModal("cert","${a.id}")' style="flex:1;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;padding:10px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:inherit">View Certification</button></div></div>`;
+    }
+    if(type==='security'){
+        b.innerHTML=`<div style="padding:24px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px"><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#059669,#047857);display:flex;align-items:center;justify-content:center"><svg style="width:20px;height:20px;color:#fff" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div><div><h3 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent)">Security Profile</h3><p style="font-size:12px;color:var(--text-muted)">${a.name}</p></div></div>${cb}</div>
+        <div style="${ci};border-left:4px solid #10b981"><p style="${lbl};color:var(--accent-green)">🔐 Encryption</p><p style="${val}">${a.security.encryption}</p></div>
+        <div style="${ci};border-left:4px solid #3b82f6"><p style="${lbl};color:var(--accent-blue)">🔑 Access Control</p><p style="${val}">${a.security.access}</p></div>
+        <div style="${ci};border-left:4px solid #f59e0b"><p style="${lbl};color:var(--accent-amber)">📋 Audit Trail</p><p style="${val}">${a.security.audit}</p></div>
+        <div style="${ci};border-left:4px solid #8b5cf6"><p style="${lbl};color:var(--accent-purple)">✅ Compliance</p><p style="${val}">${a.security.compliance}</p></div>
+        <div style="${ci};border:1px solid var(--border-main);margin-top:16px"><p style="${lbl}">Audit & Verification Services</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">${a.links.map(l=>`<button onclick='openLinkPopup("${l}")' style="font-size:11px;padding:6px 12px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-main);color:var(--text-secondary);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='var(--text-accent)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-main)';this.style.color='var(--text-secondary)'"><svg style="width:12px;height:12px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${l.replace('https://','')}</button>`).join('')}</div></div></div>`;
+    }
+    if(type==='cert'){
+        b.innerHTML=`<div style="padding:24px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px"><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);display:flex;align-items:center;justify-content:center"><svg style="width:20px;height:20px;color:#fff" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><div><h3 style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text-accent)">Certification & Testing</h3><p style="font-size:12px;color:var(--text-muted)">${a.name}</p></div></div>${cb}</div>
+        <div style="${ci};border-left:4px solid #8b5cf6"><p style="${lbl};color:var(--accent-purple)">Certifying Body</p><p style="${val};font-weight:600">${a.certification.body}</p></div>
+        <div style="${ci};border-left:4px solid #3b82f6"><p style="${lbl};color:var(--accent-blue)">Testing Methodology</p><p style="${val}">${a.certification.method}</p></div>
+        <div style="${ci};border-left:4px solid #CCFF00"><p style="${lbl};color:var(--text-accent)">Version & Date</p><p style="${val};font-weight:600">${a.certification.version}</p></div>
+        <div style="${ci};border-left:4px solid #f59e0b"><p style="${lbl};color:var(--accent-amber)">Independent Auditors</p>${a.certification.auditors.map(au=>`<p style="${val};display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0"></span>${au}</p>`).join('')}</div>
+        <div style="${ci};border:1px solid var(--border-main);margin-top:16px"><p style="${lbl}">Verification Links</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">${a.links.map(l=>`<button onclick='openLinkPopup("${l}")' style="font-size:11px;padding:6px 12px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-main);color:var(--text-secondary);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='var(--text-accent)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-main)';this.style.color='var(--text-secondary)'"><svg style="width:12px;height:12px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${l.replace('https://','')}</button>`).join('')}</div></div></div>`;
+    }
+}
+
+function init(){
+    const stats=[{l:'Active Agents',v:'24',s:'+3 this week'},{l:'Tasks Today',v:'1,847',s:'98.6% success'},{l:'Certifications',v:'18',s:'SOC2, ISO 27001'},{l:'Cost Savings',v:'$2.4M',s:'Annual projected'}];
+    document.getElementById('stats-row').innerHTML=stats.map((s,i)=>`<div class="card" style="padding:20px;opacity:0;animation:slide-up 0.5s ease-out ${i*0.1}s forwards"><p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px">${s.l}</p><p style="font-size:28px;font-weight:700;color:var(--text-accent);font-family:'DM Serif Display',serif">${s.v}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${s.s}</p></div>`).join('');
+
+    const stages=[{n:'Requirements',p:100,a:false},{n:'Model Tuning',p:100,a:false},{n:'Testing & QA',p:67,a:true},{n:'Security Audit',p:0,a:false},{n:'Certification',p:0,a:false},{n:'Deployment',p:0,a:false}];
+    document.getElementById('pipeline-bar').innerHTML=stages.map((s,i)=>{
+        const bdr=s.a?'border:2px solid #CCFF00':'border:1px solid var(--border-main)'+(s.p===0?';opacity:0.5':'');
+        const arrow=i<stages.length-1?'<svg style="width:20px;height:20px;color:var(--text-dim);flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>':'';
+        return `<div style="display:flex;align-items:center;gap:12px;flex-shrink:0"><div style="background:var(--bg-card);border-radius:12px;padding:12px 16px;min-width:140px;${bdr};transition:all 0.4s"><p style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${s.a?'var(--text-accent)':'var(--text-muted)'}">${s.a?'Active':s.p===100?'Done':'Pending'}</p><p style="font-size:14px;font-weight:600;margin-top:4px;color:var(--text-primary)">${s.n}</p><div style="margin-top:8px;height:6px;border-radius:3px;background:var(--border-main);overflow:hidden"><div style="height:100%;border-radius:3px;background:${s.p>0?'#CCFF00':'var(--text-dim)'};width:${s.p}%;transition:width 0.5s"></div></div></div>${arrow}</div>`;
+    }).join('');
+
+    document.getElementById('dashboard-agents').innerHTML=agents.slice(0,6).map((a,i)=>renderAgentCard(a,i)).join('');
+
+    const cols=[{k:'intake',c:'#60a5fa',l:'Intake',h:false},{k:'training',c:'#fbbf24',l:'Training',h:false},{k:'testing',c:'#CCFF00',l:'Testing',h:true},{k:'security',c:'#a78bfa',l:'Security',h:false},{k:'cert',c:'#34d399',l:'Cert',h:false},{k:'deployed',c:'#fb7185',l:'Deployed',h:false}];
+    document.getElementById('pipeline-board').innerHTML=cols.map(c=>{
+        const items=pipelineData[c.k];
+        const bdr=c.h?'border:2px solid #CCFF00':'border:1px solid var(--border-main)';
+        return `<div style="background:var(--bg-card);${bdr};border-radius:16px;padding:16px;min-height:420px;transition:all 0.4s"><div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="width:8px;height:8px;border-radius:50%;background:${c.c}"></span><span style="font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${c.h?'var(--text-accent)':'var(--text-muted)'}">${c.l}</span><span style="margin-left:auto;font-size:10px;background:var(--bg-badge);padding:2px 8px;border-radius:99px;color:var(--text-muted)">${items.length}</span></div><div style="display:flex;flex-direction:column;gap:8px">${items.map(n=>`<div style="background:var(--bg-card-inner);border:1px solid var(--border-subtle);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:500;color:var(--text-secondary);transition:border 0.2s;cursor:default" onmouseover="this.style.borderColor='var(--border-main)'" onmouseout="this.style.borderColor='var(--border-subtle)'">${n}</div>`).join('')}</div></div>`;
+    }).join('');
+
+    renderAgentsGrid('all');
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
